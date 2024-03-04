@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+direction=$1
+
+window=$(yabai -m query --windows --window | jq -r '.id') 
+
+if [[ $(yabai -m query --windows --window stack.first) ]]; then
+	yabai -m window --warp $direction \
+		|| { yabai -m window --insert $direction && yabai -m window --toggle float && yabai -m window --toggle float; }
+else
+	yabai -m window $direction --stack $window
+fi

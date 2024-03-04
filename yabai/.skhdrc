@@ -1,0 +1,62 @@
+# Rearrange windows
+shift + rcmd - w : ~/bin/yabai-stack-or-move north
+shift + rcmd - a : ~/bin/yabai-stack-or-move west
+shift + rcmd - s : ~/bin/yabai-stack-or-move south 
+shift + rcmd - d : ~/bin/yabai-stack-or-move east 
+
+# Resize windows
+ctrl + rcmd - w : yabai -m window --resize bottom:0:20 ; yabai -m window --resize top:0:20
+ctrl + rcmd - a : yabai -m window --resize left:-20:0 ; yabai -m window --resize right:-20:0
+ctrl + rcmd - s : yabai -m window --resize top:0:-20 ; yabai -m window --resize bottom:0:-20
+ctrl + rcmd - d : yabai -m window --resize right:20:0 ; yabai -m window --resize left:20:0
+
+# Change focus window
+rcmd - d : ~/bin/yabai-cycle-windows forward
+rcmd - a : ~/bin/yabai-cycle-windows reverse
+
+# Fullscreen mode
+rcmd - return : yabai -m window --toggle zoom-fullscreen && yabai -m window --focus "$(yabai -m query --windows --window | jq -er .id)"
+
+# Toggle split direction
+rcmd - v : yabai -m window --toggle split
+rcmd - b : yabai -m space --balance
+rcmd - g : yabai -m window --toggle float
+
+# Change space layout mode
+rcmd - c : yabai -m space --layout stack
+rcmd - z : yabai -m space --layout bsp
+rcmd - x : yabai -m space --layout float
+
+# Toggle gap and padding
+rcmd - p : yabai -m space --toggle padding && yabai -m space --toggle gap
+
+# Send active window to workspace
+shift + rcmd - 1 : yabai -m window --space 1
+shift + rcmd - 2 : yabai -m window --space 2
+shift + rcmd - 3 : yabai -m window --space 3
+shift + rcmd - 4 : yabai -m window --space 4
+shift + rcmd - 5 : yabai -m window --space 5
+shift + rcmd - 6 : yabai -m window --space 6
+shift + rcmd - 7 : yabai -m window --space 7
+shift + rcmd - 8 : yabai -m window --space 8
+shift + rcmd - 9 : yabai -m window --space 9
+shift + rcmd - 0 : yabai -m window --space 0
+
+# Move between workspaces wit rcmd
+rcmd - 1 :  yabai -m query --spaces --space 1 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 2 :  yabai -m query --spaces --space 2 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 3 :  yabai -m query --spaces --space 3 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 4 :  yabai -m query --spaces --space 4 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 5 :  yabai -m query --spaces --space 5 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 6 :  yabai -m query --spaces --space 6 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 7 :  yabai -m query --spaces --space 7 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 8 :  yabai -m query --spaces --space 8 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 9 :  yabai -m query --spaces --space 9 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 0 :  yabai -m query --spaces --space 0 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+
+# Open Iterm2
+rcmd - t : open -n -a "/Applications/iTerm.app/Contents/MacOS/iTerm2"
+
+# Disabled keybindings
+rcmd - e : echo "disabled"
+rcmd - w : echo "disabled"

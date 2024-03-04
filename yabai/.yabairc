@@ -1,0 +1,13 @@
+gap_size_padding=10
+gap_size_window=10
+
+# Padding and gaps
+yabai -m config top_padding    $gap_size_padding
+yabai -m config bottom_padding $gap_size_padding
+yabai -m config left_padding   $gap_size_padding
+yabai -m config right_padding  $gap_size_padding
+yabai -m config window_gap     $gap_size_window
+
+# Make hovered window active
+yabai -m config mouse_follows_focus          off
+yabai -m config focus_follows_mouse          autofocus
