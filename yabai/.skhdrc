@@ -15,7 +15,7 @@ rcmd - d : ~/bin/yabai-cycle-windows forward
 rcmd - a : ~/bin/yabai-cycle-windows reverse
 
 # Fullscreen mode
-rcmd - return : yabai -m window --toggle zoom-fullscreen && yabai -m window --focus "$(yabai -m query --windows --window | jq -er .id)"
+rcmd - f : yabai -m window --toggle zoom-fullscreen && yabai -m window --focus "$(yabai -m query --windows --window | jq -er .id)"
 
 # Toggle split direction
 rcmd - v : yabai -m window --toggle split

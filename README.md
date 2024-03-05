@@ -23,7 +23,7 @@ I choosed "right cmd" as my mod key, as I hadn't used it more than once or twice
 * `rcmd - [0-9]` - Set focus on space N (requires the target space has at least one active window)
 * `shift + rcmd - [WASD]` - move window up, left, down, right in the same space
 * `shift + rcmd - [0-9]` - send window to another space (requires the target space to exist)
-* `rcmd - return` - toggle fullscreen for focused window (NOTE! not native fullscreen)
+* `rcmd - f` - toggle fullscreen for focused window (NOTE! not native fullscreen)
 * `rcmd - v` - toggle split mode for current window (horizontal/vertical)
 * `rcmd - g` - toggle float for window (i.e. make it unmanaged)
 * `rcmd - b` - re-balance all windows in the current space
@@ -34,7 +34,7 @@ I choosed "right cmd" as my mod key, as I hadn't used it more than once or twice
 * `rcmd - x` - set layout for current space to `float` (i.e. unmanaged space)
   
 ### Gaps
-* `rcmd - z` - toggle gaps and padding on/off
+* `rcmd - p` - toggle gaps and padding on/off
 
 # Screenshots
 ![Alt text](images/rice.png "Riced MacBook")
