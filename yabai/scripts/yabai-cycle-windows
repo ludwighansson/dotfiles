@@ -1,20 +1,35 @@
 #!/usr/bin/env bash
 
-function cycle_v2() {
-  test "${1}" = "reverse" || is_reversed="| reverse"
-  
-  yabai -m query --spaces --space \
-  | jq -re ".index" \
-  | xargs -I{} yabai -m query --windows --space {} \
-  | jq -sre 'add | map(select(."is-minimized" == false)) | map(select(."app" != "Emoji & Symbols")) | sort_by(.display, .frame.y, .frame.x, .id) '"${is_reversed}"' | nth(index(map(select(."has-focus" == true))) - 1).id' \
-  | xargs -I{} yabai -m window --focus {}
+function yabai_focus_window() {
+	yabai -m window --focus "${1}"
 }
 
+function yabai_focus_stack() {
+	local target="${1}"
+	local fallback="${2}"
 
-if [[ "${1}" == "forward" ]]; then
-	cycle_v2
-fi
+	local target_id=$(yabai -m query --windows --window stack.${target} | jq '.id')
+	local fallback_id=$(yabai -m query --windows --window stack.${fallback} | jq '.id')
 
-if [[ "${1}" == "reverse" ]]; then
-	cycle_v2 reverse
-fi
+	yabai_focus_window "${target_id}"
+	if [[ ${?} -ne 0 ]] || [[ -z "${target_id}" ]] ; then
+		echo "failed to find next window, trying fallback..."
+		yabai_focus_window "${fallback_id}" \
+			|| echo "failed focusing on fallback window"
+	fi
+}
+
+function yabai_cycle_stack() {
+	local direction="${1}"
+
+	if [[ "${direction}" == "north" || "${direction}" == "east" ]]; then 
+		yabai_focus_stack "next" "first"
+	else
+		yabai_focus_stack "prev" "last"
+	fi
+}
+
+test -n "${1}" || { echo "Missing positional argument <direction>" 1>&2; exit 1; }
+
+# If change of focus fails, cycle through the stack 
+yabai_focus_window "${1}" || yabai_cycle_stack "${1}"

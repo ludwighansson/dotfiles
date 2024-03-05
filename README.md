@@ -38,3 +38,8 @@ I choosed "right cmd" as my mod key, as I hadn't used it more than once or twice
 
 # Screenshots
 ![Alt text](images/rice.png "Riced MacBook")
+
+## Split stacking focus movement
+Move focus around the stacked windows with `mod - [WASD]`. When moving "out of scope", the stack is looped. `mod - d` moves to the rightmost stack, pressing `mod - d` again will perform a `--focus stack.next` until the stack has been looped through entirely, then invoking `--focus stack.first` to continue the loop.
+If there are no surronding windows positioned above or beneath the active window, `mod - w` and `mod - s` can be used to orient the stack back and forth, instead of only one direction
+![Alt text](images/split_stack.gif "split stack orientation")
