@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 direction=$1
-
 window=$(yabai -m query --windows --window | jq -r '.id') 
 
+# Test if the active window is stacked. 
+# If so, warp it to the desired direction to make it "pop out" from the stack
+# Else, try to move the active window into an already existing window in the desired direction
 if [[ $(yabai -m query --windows --window stack.first) ]]; then
 	yabai -m window --warp $direction \
 		|| { yabai -m window --insert $direction && yabai -m window --toggle float && yabai -m window --toggle float; }
