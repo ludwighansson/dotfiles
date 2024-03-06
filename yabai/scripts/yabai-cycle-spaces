@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# Debug function, simulate script was executed from a specific space
+#test -n "${2}" && { yabai -m window --focus $(yabai -m query --spaces --space "${2}" | jq '.windows | first') ; sleep 1;}
+
+current_space=$(yabai -m query --spaces --space)
+current_index=$(jq '.index' <<< "${current_space}")
+
+current_display=$(yabai -m query --displays --display)
+current_spaces_on_dispaly=$(jq '.spaces | sort' <<< "${current_display}")
+current_spaces_min_index=$(jq 'first' <<< "${current_spaces_on_dispaly}")
+current_spaces_max_index=$(jq 'last' <<< "${current_spaces_on_dispaly}")
+
+# Calculate the next space index
+direction="${1}"
+if [[ "${direction}" == "next" ]]; then
+    target_space_index=$((current_index+1))
+elif [[ "${direction}" == "prev" ]]; then
+    target_space_index=$((current_index-1))
+else
+    echo "Missing positional argument <direction>" 1>&2; 
+    exit 1
+fi
+
+if [[ "${target_space_index}" -lt "${current_spaces_min_index}" ]]; then
+    target_space_index="${current_spaces_max_index}"
+elif [[ "${target_space_index}" -gt "${current_spaces_max_index}" ]]; then
+    target_space_index="${current_spaces_min_index}"
+fi
+
+echo "next space will be ${target_space_index}"
+
+target_space_window_id=$(yabai -m query --spaces --space "${target_space_index}" | jq '.windows | first')
+[[ ${?} -eq 0 ]] \
+    && yabai -m window --focus "${target_space_window_id}" \
+    || { echo "could not find any window on sapce ${target_space_index}" 1>&2; exit 1; }
+
+
