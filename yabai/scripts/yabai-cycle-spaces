@@ -34,5 +34,3 @@ target_space_window_id=$(yabai -m query --spaces --space "${target_space_index}"
 [[ ${?} -eq 0 ]] \
     && yabai -m window --focus "${target_space_window_id}" \
     || { echo "could not find any window on sapce ${target_space_index}" 1>&2; exit 1; }
-
-

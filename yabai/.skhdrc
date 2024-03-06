@@ -49,16 +49,16 @@ shift + rcmd - 9 : yabai -m window --space 9
 shift + rcmd - 0 : yabai -m window --space 0
 
 # Move between workspaces wit rcmd
-rcmd - 1 :  yabai -m query --spaces --space 1 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 2 :  yabai -m query --spaces --space 2 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 3 :  yabai -m query --spaces --space 3 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 4 :  yabai -m query --spaces --space 4 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 5 :  yabai -m query --spaces --space 5 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 6 :  yabai -m query --spaces --space 6 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 7 :  yabai -m query --spaces --space 7 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 8 :  yabai -m query --spaces --space 8 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 9 :  yabai -m query --spaces --space 9 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
-rcmd - 0 :  yabai -m query --spaces --space 0 | jq -r '.windows[0] // empty' | xargs yabai -m window --focus
+rcmd - 1 :  yabai -m query --spaces --space 1 | ~/bin/yabai-focus-on-space 1
+rcmd - 2 :  yabai -m query --spaces --space 2 | ~/bin/yabai-focus-on-space 2
+rcmd - 3 :  yabai -m query --spaces --space 3 | ~/bin/yabai-focus-on-space 3
+rcmd - 4 :  yabai -m query --spaces --space 4 | ~/bin/yabai-focus-on-space 4
+rcmd - 5 :  yabai -m query --spaces --space 5 | ~/bin/yabai-focus-on-space 5
+rcmd - 6 :  yabai -m query --spaces --space 6 | ~/bin/yabai-focus-on-space 6
+rcmd - 7 :  yabai -m query --spaces --space 7 | ~/bin/yabai-focus-on-space 7
+rcmd - 8 :  yabai -m query --spaces --space 8 | ~/bin/yabai-focus-on-space 8
+rcmd - 9 :  yabai -m query --spaces --space 9 | ~/bin/yabai-focus-on-space 9
+rcmd - 0 :  yabai -m query --spaces --space 0 | ~/bin/yabai-focus-on-space 0
 
 # Open Iterm2
 rcmd - t : open -n -a "/Applications/iTerm.app/Contents/MacOS/iTerm2"
