@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+YABAI_MOVE_MOUSE_WITH_SPACE="${YABAI_MOVE_MOUSE_WITH_SPACE:-true}"
+
 function panic() {
 	echo "${*}" 1>&2
 	exit 1;
@@ -10,34 +12,55 @@ function get_active_display() {
 	yabai -m query --windows --window "${window_id}" | jq '.display'
 }
 
-target_space="${1}"
+function get_total_display_count() {
+	yabai -m query --displays | jq 'map(.index) | length'
+}
+
+function focus_on_space() {
+	local space_window_id="${1}"
+	yabai -m window --focus "${space_window_id}"
+}
+
+function move_mouse_with_space() {
+	local window_id="${1}"
+
+	# Get active display id
+	current_display=$(get_active_display)
+	[[ ${?} -eq 0 ]] \
+		|| panic "failed to extract display id from current window"
+	
+	# Get target display id
+	target_display=$(get_active_display "${target_space_window_id}")
+	[[ ${?} -eq 0 ]] \
+		|| panic "failed to extract display id from target window"
+
+	# If the target window is on a different screen, move the mouse with it
+	[[ "${current_display}" -eq "${target_display}" ]] \
+		|| yabai -m config mouse_follows_focus on
+	
+	# Move to space
+	focus_on_space "${window_id}"
+
+	# Reset mouse follow window focus to not interfere 
+	# when moving between spaces or windows on the same screen
+	[[ "${current_display}" -eq "${target_display}" ]] \
+		|| yabai -m config mouse_follows_focus off
+}
+
+# Get current space 
 current_space=$(yabai -m query --spaces --space | jq '.index')
 [[ ${?} -eq 0 ]] \
 	|| panic "failed to extract current space index"
 
+target_space="${1}"
 target_space_window_id=$(yabai -m query --spaces --space "${target_space}" | jq '.windows | first')
 [[ ${?} -eq 0 ]] \
 	|| panic "could not find any window on space ${target_space}"
-
-current_display=$(get_active_display)
-[[ ${?} -eq 0 ]] \
-	|| panic "failed to extract display id from current window"
-
-target_display=$(get_active_display "${target_space_window_id}")
-[[ ${?} -eq 0 ]] \
-	|| panic "failed to extract display id from target window"
 
 # Exit if targeting the same space as the ative one
 [[ "${target_space}" -eq "${current_space}" ]] \
 	&& { echo "targeting the current space, skipping..."; exit 0; }
 
-# If the target window is on a different screen, move the mouse with it
-[[ "${current_display}" -eq "${target_display}" ]] \
-	|| yabai -m config mouse_follows_focus on
-
-yabai -m window --focus "${target_space_window_id}"
-
-# Reset mouse follow window focus to not interfere 
-# when moving between spaces or windows on the same screen
-[[ "${current_display}" -eq "${target_display}" ]] \
-	|| yabai -m config mouse_follows_focus off
+[[ "${YABAI_MOVE_MOUSE_WITH_SPACE}" == "true" ]] \
+	&& move_mouse_with_space "${target_space_window_id}" \
+	|| focus_on_space "${target_space_window_id}"

@@ -17,8 +17,8 @@ ctrl + rcmd - s : yabai -m window --resize top:0:-20 ; yabai -m window --resize 
 ctrl + rcmd - d : yabai -m window --resize right:20:0 ; yabai -m window --resize left:20:0
 
 # Cycle through spaces on the same display
-rcmd - q : ~/bin/yabai-cycle-spaces prev
-rcmd - e : ~/bin/yabai-cycle-spaces next
+rcmd - q : echo "disabled" ##~/bin/yabai-cycle-spaces prev
+rcmd - e : echo "disabled" ##~/bin/yabai-cycle-spaces next
 
 # Fullscreen mode
 rcmd - f : yabai -m window --toggle zoom-fullscreen && yabai -m window --focus "$(yabai -m query --windows --window | jq -er .id)"
@@ -61,4 +61,4 @@ rcmd - 9 :  yabai -m query --spaces --space 9 | ~/bin/yabai-focus-on-space 9
 rcmd - 0 :  yabai -m query --spaces --space 0 | ~/bin/yabai-focus-on-space 0
 
 # Open Iterm2
-rcmd - t : open -n -a "/Applications/iTerm.app/Contents/MacOS/iTerm2"
+#rcmd - t : open -n -a "/Applications/iTerm.app/Contents/MacOS/iTerm2"

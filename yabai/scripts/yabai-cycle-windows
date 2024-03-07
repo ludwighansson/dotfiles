@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
+YABAI_AUTO_DISABLE_FULLSCREEN="${YABAI_AUTO_DISABLE_FULLSCREEN:-false}"
+
 function yabai_focus_window() {
 	yabai -m window --focus "${1}"
+}
+
+function yabai_get_active_window() {
+	yabai -m query --windows --window | jq '.id'
 }
 
 function yabai_focus_stack() {
@@ -15,8 +21,10 @@ function yabai_focus_stack() {
 	if [[ ${?} -ne 0 ]] || [[ -z "${target_id}" ]] ; then
 		echo "failed to find next window, trying fallback..."
 		yabai_focus_window "${fallback_id}" \
-			|| echo "failed focusing on fallback window"
+			|| { echo "failed focusing on fallback window"; local result=1; }
 	fi
+
+	return ${result}
 }
 
 function yabai_cycle_stack() {
@@ -29,7 +37,22 @@ function yabai_cycle_stack() {
 	fi
 }
 
+function disable_window_fullscreen() {
+	local window_id="${1}"
+
+	local is_fullscreen=$(yabai -m query --windows --window "${window_id}" | jq '."has-fullscreen-zoom"')
+	if [[ "${is_fullscreen}" == "true" ]]; then
+		yabai -m window "${window_id}" --toggle zoom-fullscreen 
+	fi
+}
+
 test -n "${1}" || { echo "Missing positional argument <direction>" 1>&2; exit 1; }
+
+source_window_id=$(yabai_get_active_window)
 
 # If change of focus fails, cycle through the stack 
 yabai_focus_window "${1}" || yabai_cycle_stack "${1}"
+
+# If the previous window was in fulscreen mode, bring it back to non-fullscreen
+[[ "${YABAI_AUTO_DISABLE_FULLSCREEN}" == "true" ]] \
+	&& disable_window_fullscreen "${source_window_id}"
