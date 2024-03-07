@@ -14,3 +14,7 @@ yabai -m config focus_follows_mouse          autofocus
 
 # Add padding for simple-bar on non-notched displays
 yabai -m config external_bar all:32:0
+
+YABAI_ALTERNATE_SCREEN_IDS=true
+YABAI_AUTO_DISABLE_FULLSCREEN=true
+YABAI_MOVE_MOUSE_WITH_SPACE=true
