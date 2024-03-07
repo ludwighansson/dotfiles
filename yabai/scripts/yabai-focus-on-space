@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 YABAI_MOVE_MOUSE_WITH_SPACE="${YABAI_MOVE_MOUSE_WITH_SPACE:-true}"
+YABAI_ALTERNATE_SCREEN_IDS="${YABAI_ALTERNATE_SCREEN_IDS:-true}"
 
 function panic() {
 	echo "${*}" 1>&2
@@ -14,6 +15,10 @@ function get_active_display() {
 
 function get_total_display_count() {
 	yabai -m query --displays | jq 'map(.index) | length'
+}
+
+function get_window_id_from_space() {
+	yabai -m query --spaces --space "${target_space}" | jq '.windows | first'
 }
 
 function focus_on_space() {
@@ -47,15 +52,38 @@ function move_mouse_with_space() {
 		|| yabai -m config mouse_follows_focus off
 }
 
+function get_alternated_space_id() {
+	local space_id="${1}"
+	
+	local all_spaces=""
+	local displays=$(yabai -m query --displays | jq '.[] | .index')
+	for d in ${displays}; do
+		local count=0
+		local spaces=$(yabai -m query --displays --display "${d}" | jq '.spaces[]')
+		for s in ${spaces}; do
+			# If the space have open windows, add it to the list
+			get_window_id_from_space ${s} > /dev/null \
+				&& all_spaces=$(echo "${all_spaces}"; echo "${count} ${s}")
+			count=$((count+1))
+		done
+	done
+
+	local all_spaces=$(echo "${all_spaces}" | sort -nk1 | cut -f2 -d ' ' | sed '/^$/d')
+	sed -n "${space_id}p" <<< "${all_spaces}"
+}
+
+[[ "${YABAI_ALTERNATE_SCREEN_IDS}" == "true" ]] \
+	&& target_space="$(get_alternated_space_id ${1})" \
+	|| target_space="${1}"
+
+target_space_window_id=$(get_window_id_from_space "${target_space}")
+[[ ${?} -eq 0 ]] \
+	|| panic "could not find any window on space ${target_space}"
+
 # Get current space 
 current_space=$(yabai -m query --spaces --space | jq '.index')
 [[ ${?} -eq 0 ]] \
 	|| panic "failed to extract current space index"
-
-target_space="${1}"
-target_space_window_id=$(yabai -m query --spaces --space "${target_space}" | jq '.windows | first')
-[[ ${?} -eq 0 ]] \
-	|| panic "could not find any window on space ${target_space}"
 
 # Exit if targeting the same space as the ative one
 [[ "${target_space}" -eq "${current_space}" ]] \
