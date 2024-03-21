@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-YABAI_AUTO_DISABLE_FULLSCREEN="${YABAI_AUTO_DISABLE_FULLSCREEN:-false}"
+YABAI_AUTO_DISABLE_FULLSCREEN="${YABAI_AUTO_DISABLE_FULLSCREEN:-true}"
 
 function yabai_focus_window() {
 	yabai -m window --focus "${1}"
